@@ -9,14 +9,14 @@ class TestJenkins(object):
     def __new__(cls, *args, **kwargs):
         server = 'http://1.1.1.1:8080/jenkins'
         username = 'admin'
-        password = '1106352853360153ee6e580d9124c86901'
+        password = 'fjlajdlfjalsdjljdflsdjlfjlasdjflasdjfljasd234'
         server = jenkins.Jenkins(url=server, username=username, password=password)
         instance = super(TestJenkins, cls).__new__(cls, *args, **kwargs)
         instance.server = server
         return instance
 
     def __init__(self):
-        self.api_token = 'fire'
+        self.api_token = 'ofkine'
 
     def jobs_count(self):
         print(self.server.jobs_count())
