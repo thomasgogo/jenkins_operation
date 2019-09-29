@@ -1,0 +1,123 @@
+# -*- coding: utf-8 -*-
+# @Time    : 2019/8/22 17:04
+# @Author  : thomas
+
+import jenkins
+
+
+class TestJenkins(object):
+    def __new__(cls, *args, **kwargs):
+        server = 'http://1.1.1.1:8080/jenkins'
+        username = 'admin'
+        password = '1106352853360153ee6e580d9124c86901'
+        server = jenkins.Jenkins(url=server, username=username, password=password)
+        instance = super(TestJenkins, cls).__new__(cls, *args, **kwargs)
+        instance.server = server
+        return instance
+
+    def __init__(self):
+        self.api_token = 'fire'
+
+    def jobs_count(self):
+        print(self.server.jobs_count())
+
+    def server_info(self):
+        print(self.server.server)
+
+    def get_jobs_info(self):
+        for item in self.server.get_all_jobs():
+            print('name: %s' % item['name'], 'URL: ', item['url'])
+
+    def get_whoami(self):
+        print(self.server.get_whoami(depth=10))
+
+    def get_auth(self):
+        print(self.server.auth)
+
+    def get_debug_job_info(self, name):
+        print(self.server.debug_job_info(name))
+
+    def check_job_exists(self, name):
+        print(self.server.job_exists(name))
+
+    def get_all_jobs(self):
+        print(self.server.get_all_jobs())
+
+    def create_job(self):
+        print(self.server.create_job('API-1', jenkins.RECONFIG_XML))
+        print(self.server.create_job('API-2', jenkins.RECONFIG_XML))
+
+    def delete_job(self, name):
+        print(self.server.delete_job(name))
+
+    def copy_job(self, name, new_name):
+        print(self.server.copy_job(name, new_name))
+
+    def enable_job(self, name):
+        print(self.server.enable_job(name))
+
+    def disable_job(self, name):
+        print(self.server.disable_job(name))
+
+    def reconfig_job(self, name):
+        print(self.server.reconfig_job(name, jenkins.RECONFIG_XML))
+
+    def rename_job(self, name, new_name):
+        print(self.server.rename_job(name, new_name))
+
+    def build_job(self, name, parameters):
+        print(self.server.build_job(name, parameters, token=self.api_token))
+
+    def get_job_info(self, name):
+        build_arg = self.server.get_job_info(name)["property"]
+        for parameter_definitions in build_arg:
+            if len(parameter_definitions) > 1:
+                for parameter in parameter_definitions["parameterDefinitions"]:
+                    print('----------------------------------')
+                    print('name: %s' % parameter["name"])
+                    print('class: %s' % parameter["_class"])
+                    print('type: %s' % parameter["type"])
+                    print('description: %s' % parameter["description"])
+                    print('jenkins_arg: %s' % parameter["defaultParameterValue"]["name"])
+                    print('default_value: %s' % parameter["defaultParameterValue"]["value"])
+                    if parameter["_class"] == 'hudson.model.ChoiceParameterDefinition':
+                        print('can_choices: %s' % parameter["choices"])
+                    print('----------------------------------')
+
+    def get_build_log(self, name):
+        last_build_number = self.server.get_job_info(name)['lastCompletedBuild']['number']
+        
+        print(self.server.get_build_console_output(name, last_build_number))
+
+    def __call__(self, *args, **kwargs):
+        # self.jobs_count()
+        # self.server_info()
+        # self.get_jobs_info()
+        # self.get_whoami()
+        # self.get_auth()
+        # self.get_debug_job_info('shop18')
+        # self.check_job_exists('shop18')
+        # self.get_all_jobs()
+        # self.create_job()
+        # self.delete_job('API')
+        # self.copy_job('shop18', 'shop20')
+        # self.enable_job('shop20')
+        # self.disable_job('shop20')
+        # self.reconfig_job('API-2')
+        # self.rename_job('API-2', 'API-2-new')
+
+        # self.get_job_info('shop')
+
+        # build new job
+        # param_dict = {'repository': 'ssh://git@xxxxx:36000/xxx/xxxxx.git',
+        #               'profile': 'xxxxx',
+        #               'branch': 'release',
+        #               'upload_nexus': False,
+        #               'deploy_app': False}
+
+        # self.build_job('shop', parameters=param_dict)
+        # self.get_build_log('shop')
+
+        pass
+
+TestJenkins()()
